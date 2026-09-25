@@ -11,7 +11,7 @@ from sentence_transformers import SentenceTransformer
 # COALMIND AI / HYBRID RAG QUERY RESPONSE
 # ============================================================
 
-BASE_FOLDER = r"C:\coalmind"
+BASE_FOLDER = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 OUTPUT_FOLDER = os.path.join(BASE_FOLDER, "output")
 
 CURRENT_FILE = os.path.join(

@@ -33,7 +33,7 @@ app = Flask(__name__)
 # FOLDERS
 # =========================================================
 
-BASE_FOLDER = r"C:\coalmind"
+BASE_FOLDER = os.path.dirname(os.path.abspath(__file__))
 
 INPUT_FOLDER = os.path.join(
     BASE_FOLDER,

@@ -1,9 +1,11 @@
 import os
 import re
 
-INPUT_FILE = r"C:\coalmind\output\cleaned_srn-jan-2025.txt"
-OUTPUT_FILE = r"C:\coalmind\output\validated_srn-jan-2025_v2.txt"
-REPORT_FILE = r"C:\coalmind\output\ocr_validation_report_v2.txt"
+BASE_FOLDER = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+OUTPUT_FOLDER = os.path.join(BASE_FOLDER,"output")
+INPUT_FILE = os.path.join(OUTPUT_FOLDER,"cleaned_srn-jan-2025.txt")
+OUTPUT_FILE = os.path.join(OUTPUT_FOLDER,"validated_srn-jan-2025_v2.txt")
+REPORT_FILE = os.path.join(OUTPUT_FOLDER,"ocr_validation_report_v2.txt")
 
 
 # ---------------------------------------------------------
@@ -296,8 +298,6 @@ def validate_text(text):
 # ---------------------------------------------------------
 # FILE PROCESSING
 # ---------------------------------------------------------
-
-OUTPUT_FOLDER = r"C:\coalmind\output"
 
 
 def process_text_file(input_file):

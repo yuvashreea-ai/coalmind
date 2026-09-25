@@ -1,10 +1,11 @@
 import os
 import re
 
-INPUT_FILE = r"C:\coalmind\output\srn-jan-2025.txt"
-OUTPUT_FILE = r"C:\coalmind\output\cleaned_srn-jan-2025.txt"
-REVIEW_FILE = r"C:\coalmind\output\cleaning_review.txt"
-OUTPUT_FOLDER = r"C:\coalmind\output"
+BASE_FOLDER = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+OUTPUT_FOLDER = os.path.join(BASE_FOLDER,"output")
+INPUT_FILE = os.path.join(OUTPUT_FOLDER,"srn-jan-2025.txt")
+OUTPUT_FILE = os.path.join(OUTPUT_FOLDER,"cleaned_srn-jan-2025.txt")
+REVIEW_FILE = os.path.join(OUTPUT_FOLDER,"cleaning_review.txt")
 
 
 # ---------------------------------------------------------

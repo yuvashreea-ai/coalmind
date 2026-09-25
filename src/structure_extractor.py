@@ -3,7 +3,8 @@ import re
 import json
 
 
-OUTPUT_FOLDER = r"C:\coalmind\output"
+BASE_FOLDER = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+OUTPUT_FOLDER = os.path.join(BASE_FOLDER,"output")
 
 
 # =========================================================

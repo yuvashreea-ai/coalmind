@@ -10,7 +10,7 @@ import matplotlib.pyplot as plt
 # FOLDERS
 # =========================================================
 
-BASE_FOLDER = r"C:\coalmind"
+BASE_FOLDER = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 OUTPUT_FOLDER = os.path.join(
     BASE_FOLDER,

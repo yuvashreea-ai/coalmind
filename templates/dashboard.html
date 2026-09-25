@@ -1,0 +1,3615 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>CoalMind | Intelligent Report Analysis</title>
+
+    <style>
+
+        /* =========================================================
+           GLOBAL
+        ========================================================= */
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family:
+                "Segoe UI",
+                Inter,
+                Arial,
+                sans-serif;
+
+            background: #f6f9fc;
+            color: #243447;
+
+            font-size: 15px;
+            line-height: 1.5;
+        }
+
+        button,
+        input,
+        textarea,
+        select {
+            font-family: inherit;
+        }
+
+
+        /* =========================================================
+           APP
+        ========================================================= */
+
+        .app {
+            display: flex;
+            min-height: 100vh;
+        }
+
+
+        /* =========================================================
+           SIDEBAR
+        ========================================================= */
+
+        .sidebar {
+            width: 250px;
+
+            background: #ffffff;
+
+            color: #26384a;
+
+            position: fixed;
+
+            left: 0;
+            top: 0;
+            bottom: 0;
+
+            display: flex;
+            flex-direction: column;
+
+            padding: 24px 16px;
+
+            z-index: 1000;
+
+            border-right: 1px solid #e5ebf1;
+
+            box-shadow:
+                4px 0 18px rgba(
+                    36,
+                    52,
+                    71,
+                    .035
+                );
+        }
+
+
+        /* =========================================================
+           BRAND
+        ========================================================= */
+
+        .brand {
+            display: flex;
+
+            align-items: center;
+
+            gap: 12px;
+
+            padding:
+                3px 10px 28px;
+        }
+
+        .brand-icon {
+            width: 43px;
+            height: 43px;
+
+            border-radius: 11px;
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            background: #eaf5fa;
+
+            color: #237fa6;
+
+            border:
+                1px solid #d4e8f1;
+
+            font-size: 16px;
+
+            font-weight: 800;
+
+            letter-spacing: .5px;
+        }
+
+        .brand-text strong {
+            display: block;
+
+            font-size: 20px;
+
+            color: #1e3448;
+
+            letter-spacing: .2px;
+        }
+
+        .brand-text span {
+            display: block;
+
+            margin-top: 2px;
+
+            font-size: 10px;
+
+            color: #8291a0;
+
+            letter-spacing: .7px;
+
+            text-transform: uppercase;
+        }
+
+
+        /* =========================================================
+           NAVIGATION
+        ========================================================= */
+
+        .nav-label {
+            color: #9aa7b4;
+
+            font-size: 10px;
+
+            font-weight: 800;
+
+            letter-spacing: 1.3px;
+
+            padding:
+                0 12px 9px;
+
+            text-transform: uppercase;
+        }
+
+        .nav {
+            display: flex;
+
+            flex-direction: column;
+
+            gap: 4px;
+        }
+
+        .nav-item {
+            border: 1px solid transparent;
+
+            background: transparent;
+
+            color: #68798a;
+
+            text-decoration: none;
+
+            width: 100%;
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 12px;
+
+            padding:
+                11px 13px;
+
+            border-radius: 9px;
+
+            cursor: pointer;
+
+            font-size: 14px;
+
+            font-weight: 500;
+
+            text-align: left;
+
+            transition:
+                background .18s ease,
+                color .18s ease,
+                border-color .18s ease;
+        }
+
+        .nav-item:hover {
+            background: #f4f8fb;
+
+            color: #247da3;
+
+            border-color: #e5eef4;
+        }
+
+        .nav-item.active {
+            background: #edf7fb;
+
+            color: #20789e;
+
+            border-color: #d9ebf3;
+
+            font-weight: 700;
+        }
+
+        .nav-icon {
+            width: 21px;
+
+            text-align: center;
+
+            font-size: 16px;
+
+            color: #8293a3;
+        }
+
+        .nav-item.active .nav-icon {
+            color: #2783aa;
+        }
+
+
+        /* =========================================================
+           SIDEBAR STATUS
+        ========================================================= */
+
+        .sidebar-bottom {
+            margin-top: auto;
+
+            padding:
+                16px 10px 5px;
+
+            border-top:
+                1px solid #edf1f5;
+        }
+
+        .system-status {
+            display: flex;
+
+            align-items: center;
+
+            gap: 9px;
+
+            color: #81909f;
+
+            font-size: 11px;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+
+            border-radius: 50%;
+
+            background: #61b89a;
+
+            box-shadow:
+                0 0 0 3px #e8f6f0;
+        }
+
+
+        /* =========================================================
+           MAIN
+        ========================================================= */
+
+        .main {
+            margin-left: 250px;
+
+            width:
+                calc(
+                    100% - 250px
+                );
+
+            min-height: 100vh;
+        }
+
+
+        /* =========================================================
+           TOPBAR
+        ========================================================= */
+
+        .topbar {
+            height: 72px;
+
+            background: rgba(
+                255,
+                255,
+                255,
+                .97
+            );
+
+            border-bottom:
+                1px solid #e6ecf2;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            padding:
+                0 34px;
+
+            position: sticky;
+
+            top: 0;
+
+            z-index: 900;
+
+            box-shadow:
+                0 2px 10px rgba(
+                    30,
+                    55,
+                    80,
+                    .025
+                );
+        }
+
+        .topbar-left h1 {
+            font-size: 20px;
+
+            font-weight: 700;
+
+            color: #1e3448;
+        }
+
+        .topbar-left p {
+            font-size: 12px;
+
+            color: #82909e;
+
+            margin-top: 2px;
+        }
+
+        .document-pill {
+            display: flex;
+
+            align-items: center;
+
+            gap: 8px;
+
+            background: #f0f8f5;
+
+            color: #397b65;
+
+            border:
+                1px solid #d7eee5;
+
+            border-radius: 20px;
+
+            padding:
+                8px 13px;
+
+            font-size: 11px;
+
+            font-weight: 700;
+
+            letter-spacing: .2px;
+        }
+
+        .document-pill-dot {
+            width: 7px;
+            height: 7px;
+
+            border-radius: 50%;
+
+            background: #69b99d;
+        }
+
+
+        /* =========================================================
+           CONTENT
+        ========================================================= */
+
+        .content {
+            padding: 32px;
+
+            max-width: 1500px;
+
+            margin: 0 auto;
+        }
+
+        .section {
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+
+            animation:
+                fadeIn .22s ease;
+        }
+
+        @keyframes fadeIn {
+
+            from {
+                opacity: 0;
+                transform: translateY(4px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+
+        }
+
+
+        /* =========================================================
+           HERO
+        ========================================================= */
+
+        .hero {
+            position: relative;
+
+            overflow: hidden;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #eaf5fa 0%,
+                    #f0f8fa 52%,
+                    #edf8f5 100%
+                );
+
+            color: #243b4d;
+
+            border:
+                1px solid #dcecf2;
+
+            border-radius: 18px;
+
+            padding: 36px;
+
+            margin-bottom: 24px;
+
+            box-shadow:
+                0 8px 25px rgba(
+                    30,
+                    55,
+                    80,
+                    .045
+                );
+        }
+
+        .hero::before {
+            content: "";
+
+            position: absolute;
+
+            width: 220px;
+            height: 220px;
+
+            border-radius: 50%;
+
+            right: -65px;
+            top: -90px;
+
+            background:
+                rgba(
+                    74,
+                    157,
+                    180,
+                    .08
+                );
+        }
+
+        .hero::after {
+            content: "";
+
+            position: absolute;
+
+            width: 130px;
+            height: 130px;
+
+            border-radius: 50%;
+
+            right: 110px;
+            bottom: -90px;
+
+            background:
+                rgba(
+                    93,
+                    178,
+                    154,
+                    .06
+                );
+        }
+
+        .hero-content {
+            position: relative;
+
+            z-index: 2;
+
+            max-width: 780px;
+        }
+
+        .hero-tag {
+            display: inline-block;
+
+            background: #ffffff;
+
+            color: #39829f;
+
+            border:
+                1px solid #d6e9f0;
+
+            padding:
+                6px 10px;
+
+            border-radius: 20px;
+
+            font-size: 10px;
+
+            letter-spacing: 1px;
+
+            font-weight: 800;
+
+            margin-bottom: 13px;
+        }
+
+        .hero h2 {
+            font-size: 32px;
+
+            line-height: 1.2;
+
+            color: #1f3a4e;
+
+            margin-bottom: 11px;
+        }
+
+        .hero p {
+            color: #657b89;
+
+            font-size: 14px;
+
+            line-height: 1.7;
+
+            max-width: 700px;
+        }
+
+
+        /* =========================================================
+           STATISTICS
+        ========================================================= */
+
+        .stats-grid {
+            display: grid;
+
+            grid-template-columns:
+                repeat(
+                    4,
+                    minmax(0, 1fr)
+                );
+
+            gap: 16px;
+
+            margin-bottom: 28px;
+        }
+
+        .stat-card {
+            background: #ffffff;
+
+            border:
+                1px solid #e3eaf0;
+
+            border-radius: 14px;
+
+            padding: 20px;
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 14px;
+
+            box-shadow:
+                0 4px 15px rgba(
+                    30,
+                    55,
+                    80,
+                    .035
+                );
+
+            transition:
+                transform .18s ease,
+                box-shadow .18s ease;
+        }
+
+        .stat-card:hover {
+            transform:
+                translateY(-2px);
+
+            box-shadow:
+                0 8px 22px rgba(
+                    30,
+                    55,
+                    80,
+                    .065
+                );
+        }
+
+        .stat-icon {
+            width: 45px;
+            height: 45px;
+
+            flex-shrink: 0;
+
+            border-radius: 11px;
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            background: #eef7fa;
+
+            color: #3785a2;
+
+            border:
+                1px solid #deedf2;
+
+            font-size: 18px;
+        }
+
+        .stat-label {
+            color: #8997a4;
+
+            font-size: 10px;
+
+            font-weight: 800;
+
+            text-transform: uppercase;
+
+            letter-spacing: .75px;
+
+            margin-bottom: 4px;
+        }
+
+        .stat-value {
+            display: block;
+
+            font-size: 27px;
+
+            line-height: 1;
+
+            color: #243a4d;
+
+            font-weight: 700;
+        }
+
+
+        /* =========================================================
+           SECTION HEADINGS
+        ========================================================= */
+
+        .section-heading {
+            margin-bottom: 19px;
+        }
+
+        .section-heading h2 {
+            font-size: 26px;
+
+            color: #20384b;
+
+            font-weight: 700;
+
+            margin-bottom: 5px;
+        }
+
+        .section-heading p {
+            color: #7d8c9a;
+
+            font-size: 13px;
+        }
+
+
+        /* =========================================================
+           CARDS
+        ========================================================= */
+
+        .card {
+            background: #ffffff;
+
+            border:
+                1px solid #e3eaf0;
+
+            border-radius: 15px;
+
+            padding: 23px;
+
+            box-shadow:
+                0 4px 17px rgba(
+                    30,
+                    55,
+                    80,
+                    .035
+                );
+
+            margin-bottom: 19px;
+        }
+
+        .card-title {
+            font-size: 18px;
+
+            color: #263d50;
+
+            font-weight: 700;
+
+            margin-bottom: 6px;
+        }
+
+        .card-description {
+            color: #7d8c99;
+
+            font-size: 12px;
+
+            line-height: 1.65;
+        }
+
+
+        /* =========================================================
+           QUICK ACTIONS
+        ========================================================= */
+
+        .quick-grid {
+            display: grid;
+
+            grid-template-columns:
+                repeat(
+                    3,
+                    minmax(0, 1fr)
+                );
+
+            gap: 14px;
+
+            margin-bottom: 26px;
+        }
+
+        .quick-action {
+            background: #ffffff;
+
+            border:
+                1px solid #e3eaf0;
+
+            border-radius: 13px;
+
+            padding: 17px;
+
+            cursor: pointer;
+
+            text-decoration: none;
+
+            color: inherit;
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 12px;
+
+            transition:
+                transform .18s ease,
+                border-color .18s ease,
+                box-shadow .18s ease;
+        }
+
+        .quick-action:hover {
+            transform:
+                translateY(-2px);
+
+            border-color: #c9e0ea;
+
+            box-shadow:
+                0 8px 20px rgba(
+                    30,
+                    55,
+                    80,
+                    .06
+                );
+        }
+
+        .quick-icon {
+            width: 41px;
+            height: 41px;
+
+            flex-shrink: 0;
+
+            border-radius: 10px;
+
+            background: #eef7fa;
+
+            color: #3985a1;
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            font-size: 17px;
+        }
+
+        .quick-action strong {
+            display: block;
+
+            font-size: 13px;
+
+            color: #30475a;
+
+            margin-bottom: 2px;
+        }
+
+        .quick-action span {
+            color: #8b98a5;
+
+            font-size: 11px;
+        }
+
+
+        /* =========================================================
+           CURRENT REPORT
+        ========================================================= */
+
+        .report-status {
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            gap: 20px;
+
+            background: #ffffff;
+
+            border:
+                1px solid #dfe9ee;
+
+            border-radius: 15px;
+
+            padding: 20px;
+
+            box-shadow:
+                0 4px 16px rgba(
+                    30,
+                    55,
+                    80,
+                    .03
+                );
+        }
+
+        .report-status-left {
+            display: flex;
+
+            align-items: center;
+
+            gap: 14px;
+
+            min-width: 0;
+        }
+
+        .report-file-icon {
+            width: 45px;
+            height: 45px;
+
+            flex-shrink: 0;
+
+            border-radius: 11px;
+
+            background: #edf7fa;
+
+            color: #3b88a3;
+
+            border:
+                1px solid #dcecf2;
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            font-size: 19px;
+        }
+
+        .report-status h3 {
+            font-size: 15px;
+
+            color: #30475a;
+
+            margin-bottom: 3px;
+        }
+
+        .report-name {
+            color: #71818f;
+
+            font-size: 12px;
+
+            word-break: break-word;
+        }
+
+        .ready-badge {
+            flex-shrink: 0;
+
+            background: #eef8f4;
+
+            color: #4a8b75;
+
+            border:
+                1px solid #d6ede3;
+
+            border-radius: 20px;
+
+            padding:
+                6px 11px;
+
+            font-size: 10px;
+
+            font-weight: 800;
+
+            letter-spacing: .7px;
+        }
+
+
+        /* =========================================================
+           DOCUMENT
+        ========================================================= */
+
+        .document-grid {
+            display: grid;
+
+            grid-template-columns:
+                1.35fr .65fr;
+
+            gap: 18px;
+        }
+
+        .document-main {
+            min-height: 240px;
+        }
+
+        .document-file {
+            display: flex;
+
+            align-items: center;
+
+            gap: 14px;
+
+            padding: 17px;
+
+            background: #f8fbfd;
+
+            border:
+                1px solid #e5edf2;
+
+            border-radius: 12px;
+
+            margin-top: 18px;
+        }
+
+        .file-icon {
+            width: 46px;
+            height: 46px;
+
+            flex-shrink: 0;
+
+            border-radius: 11px;
+
+            background: #edf7fa;
+
+            color: #3b88a3;
+
+            border:
+                1px solid #dcecf2;
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            font-size: 20px;
+        }
+
+        .file-name {
+            font-weight: 700;
+
+            color: #30475a;
+
+            font-size: 14px;
+
+            word-break: break-word;
+        }
+
+        .file-subtitle {
+            color: #8a98a5;
+
+            font-size: 11px;
+
+            margin-top: 3px;
+        }
+
+        .document-mini-stats {
+            display: grid;
+
+            grid-template-columns:
+                repeat(
+                    3,
+                    1fr
+                );
+
+            gap: 11px;
+
+            margin-top: 16px;
+        }
+
+        .mini-stat {
+            padding: 13px;
+
+            background: #f9fbfc;
+
+            border-radius: 10px;
+
+            border:
+                1px solid #e8eef2;
+        }
+
+        .mini-stat span {
+            display: block;
+
+            color: #8795a2;
+
+            font-size: 10px;
+
+            margin-bottom: 4px;
+        }
+
+        .mini-stat strong {
+            color: #2c4355;
+
+            font-size: 20px;
+        }
+
+
+        /* =========================================================
+           UPLOAD
+        ========================================================= */
+
+        .upload-box {
+            width: 100%;
+
+            min-height: 180px;
+
+            border:
+                1.5px dashed #cbdce5;
+
+            border-radius: 13px;
+
+            padding:
+                25px 18px;
+
+            margin-top: 18px;
+
+            text-align: center;
+
+            background: #fbfdfe;
+
+            cursor: pointer;
+
+            display: flex;
+
+            flex-direction: column;
+
+            align-items: center;
+
+            justify-content: center;
+
+            transition:
+                border-color .2s ease,
+                background .2s ease;
+        }
+
+        .upload-box:hover {
+            border-color: #86b8ca;
+
+            background: #f7fbfd;
+        }
+
+        .upload-icon {
+            width: 43px;
+            height: 43px;
+
+            border-radius: 11px;
+
+            background: #edf7fa;
+
+            color: #3c88a3;
+
+            border:
+                1px solid #dcecf2;
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            font-size: 21px;
+
+            margin-bottom: 10px;
+        }
+
+        .upload-box strong {
+            display: block;
+
+            width: 100%;
+
+            text-align: center;
+
+            color: #30475a;
+
+            font-size: 14px;
+
+            margin-bottom: 4px;
+        }
+
+        .upload-box span {
+            display: block;
+
+            width: 100%;
+
+            text-align: center;
+
+            color: #8a98a5;
+
+            font-size: 11px;
+        }
+
+        .upload-box input {
+            display: none;
+        }
+
+
+        /* =========================================================
+           SEARCH
+        ========================================================= */
+
+        .search-form {
+            display: flex;
+
+            gap: 9px;
+
+            margin-top: 18px;
+        }
+
+        .search-input {
+            flex: 1;
+
+            height: 46px;
+
+            border:
+                1px solid #d7e1e8;
+
+            border-radius: 10px;
+
+            padding:
+                0 14px;
+
+            outline: none;
+
+            background: #ffffff;
+
+            font-size: 13px;
+
+            color: #2d4355;
+
+            transition:
+                border-color .2s ease,
+                box-shadow .2s ease;
+        }
+
+        .search-input::placeholder {
+            color: #a0acb7;
+        }
+
+        .search-input:focus {
+            border-color: #8dbdce;
+
+            box-shadow:
+                0 0 0 3px rgba(
+                    91,
+                    157,
+                    180,
+                    .10
+                );
+        }
+
+        .btn {
+            border: none;
+
+            border-radius: 9px;
+
+            padding:
+                0 19px;
+
+            height: 46px;
+
+            cursor: pointer;
+
+            font-size: 13px;
+
+            font-weight: 700;
+
+            transition:
+                transform .18s ease,
+                box-shadow .18s ease;
+        }
+
+        .btn:hover {
+            transform:
+                translateY(-1px);
+        }
+
+        .btn-primary {
+            background: #4f93ad;
+
+            color: #ffffff;
+
+            box-shadow:
+                0 4px 10px rgba(
+                    79,
+                    147,
+                    173,
+                    .16
+                );
+        }
+
+        .btn-primary:hover {
+            background: #478aa3;
+        }
+
+        .btn-secondary {
+            background: #f0f4f7;
+
+            color: #526a7b;
+
+            border:
+                1px solid #e0e7ec;
+        }
+
+
+        /* =========================================================
+           SEARCH RESULTS
+        ========================================================= */
+
+        .search-summary {
+            margin-top: 22px;
+
+            margin-bottom: 12px;
+
+            color: #72818f;
+
+            font-size: 12px;
+        }
+
+        .search-result {
+            background: #ffffff;
+
+            border:
+                1px solid #e2e9ee;
+
+            border-left:
+                3px solid #76aebe;
+
+            border-radius: 11px;
+
+            padding: 15px;
+
+            margin-bottom: 10px;
+
+            box-shadow:
+                0 3px 10px rgba(
+                    30,
+                    55,
+                    80,
+                    .025
+                );
+        }
+
+        .page-badge {
+            display: inline-block;
+
+            background: #edf7fa;
+
+            color: #4a8da5;
+
+            border:
+                1px solid #dcecf2;
+
+            border-radius: 14px;
+
+            padding:
+                4px 8px;
+
+            font-size: 10px;
+
+            font-weight: 700;
+
+            margin-bottom: 7px;
+        }
+
+        .result-title {
+            font-weight: 700;
+
+            color: #30475a;
+
+            font-size: 13px;
+
+            margin-bottom: 6px;
+        }
+
+        .result-line {
+            color: #6d7d8c;
+
+            font-size: 12px;
+
+            line-height: 1.65;
+
+            padding:
+                4px 0;
+
+            border-bottom:
+                1px solid #f0f3f5;
+        }
+
+        .result-line:last-child {
+            border-bottom: none;
+        }
+
+        .no-results {
+            padding: 32px;
+
+            text-align: center;
+
+            background: #ffffff;
+
+            border-radius: 12px;
+
+            border:
+                1px solid #e3eaf0;
+
+            color: #7e8c99;
+
+            font-size: 13px;
+        }
+
+
+        /* =========================================================
+           TOPICS
+        ========================================================= */
+
+        .topics-grid {
+            display: grid;
+
+            grid-template-columns:
+                repeat(
+                    3,
+                    minmax(0, 1fr)
+                );
+
+            gap: 14px;
+        }
+
+        .topic-card {
+            display: block;
+
+            text-decoration: none;
+
+            color: inherit;
+
+            background: #ffffff;
+
+            border:
+                1px solid #e2e9ee;
+
+            border-radius: 13px;
+
+            padding: 18px;
+
+            cursor: pointer;
+
+            transition:
+                transform .18s ease,
+                border-color .18s ease,
+                box-shadow .18s ease;
+        }
+
+        .topic-card:hover {
+            transform:
+                translateY(-2px);
+
+            border-color: #bddae5;
+
+            box-shadow:
+                0 8px 20px rgba(
+                    30,
+                    55,
+                    80,
+                    .055
+                );
+        }
+
+        .topic-number {
+            color: #5b9bb3;
+
+            font-size: 10px;
+
+            font-weight: 800;
+
+            letter-spacing: .8px;
+
+            margin-bottom: 8px;
+        }
+
+        .topic-name {
+            color: #30475a;
+
+            font-size: 14px;
+
+            line-height: 1.45;
+
+            font-weight: 650;
+        }
+
+        .topic-hint {
+            color: #9aa6b1;
+
+            font-size: 10px;
+
+            margin-top: 9px;
+        }
+
+
+        /* =========================================================
+           WORD CLOUD
+        ========================================================= */
+
+        .wordcloud-container {
+            background: #ffffff;
+
+            border:
+                1px solid #e3eaf0;
+
+            border-radius: 15px;
+
+            padding: 20px;
+
+            text-align: center;
+
+            min-height: 410px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            box-shadow:
+                0 4px 17px rgba(
+                    30,
+                    55,
+                    80,
+                    .03
+                );
+        }
+
+        .wordcloud-container img {
+            max-width: 100%;
+
+            max-height: 630px;
+
+            border-radius: 9px;
+        }
+
+        .empty-state {
+            color: #8997a3;
+
+            font-size: 13px;
+
+            text-align: center;
+
+            padding: 40px;
+        }
+
+
+        /* =========================================================
+           ASK AI
+        ========================================================= */
+
+        .ai-form {
+            margin-top: 18px;
+        }
+
+        .ai-input {
+            width: 100%;
+
+            min-height: 115px;
+
+            resize: vertical;
+
+            border:
+                1px solid #d7e1e8;
+
+            border-radius: 11px;
+
+            padding: 13px;
+
+            outline: none;
+
+            background: #ffffff;
+
+            font-family: inherit;
+
+            font-size: 13px;
+
+            line-height: 1.6;
+
+            color: #30475a;
+        }
+
+        .ai-input::placeholder {
+            color: #a0acb7;
+        }
+
+        .ai-input:focus {
+            border-color: #8dbdce;
+
+            box-shadow:
+                0 0 0 3px rgba(
+                    91,
+                    157,
+                    180,
+                    .10
+                );
+        }
+
+        .ai-submit {
+            margin-top: 11px;
+        }
+
+        .ai-response {
+            margin-top: 20px;
+
+            background: #f6fafc;
+
+            border:
+                1px solid #dce9ef;
+
+            border-radius: 11px;
+
+            padding: 18px;
+
+            white-space: pre-wrap;
+
+            color: #536b7b;
+
+            font-size: 13px;
+
+            line-height: 1.75;
+        }
+
+
+        /* =========================================================
+           AUTOMATED REPORT
+        ========================================================= */
+
+        .report-actions {
+            display: flex;
+
+            gap: 9px;
+
+            margin-bottom: 15px;
+        }
+
+
+        /* =========================================================
+           LANGUAGE SELECTION
+        ========================================================= */
+
+        .language-card {
+            background: #f8fbfd;
+
+            border:
+                1px solid #dfeaf0;
+
+            border-radius: 12px;
+
+            padding: 17px;
+
+            margin-bottom: 18px;
+        }
+
+        .language-header {
+            display: flex;
+
+            align-items: center;
+
+            gap: 10px;
+
+            margin-bottom: 5px;
+        }
+
+        .language-icon {
+            width: 38px;
+            height: 38px;
+
+            border-radius: 9px;
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            background: #edf7fa;
+
+            color: #3d87a2;
+
+            border:
+                1px solid #dcecf2;
+
+            font-size: 17px;
+
+            flex-shrink: 0;
+        }
+
+        .language-title {
+            color: #30475a;
+
+            font-size: 14px;
+
+            font-weight: 700;
+        }
+
+        .language-description {
+            color: #7f8d99;
+
+            font-size: 11px;
+
+            line-height: 1.6;
+
+            margin-bottom: 13px;
+        }
+
+        .language-form {
+            display: flex;
+
+            align-items: flex-end;
+
+            gap: 10px;
+
+            flex-wrap: wrap;
+        }
+
+        .language-field {
+            display: flex;
+
+            flex-direction: column;
+
+            gap: 5px;
+
+            min-width: 220px;
+
+            flex: 1;
+        }
+
+        .language-field label {
+            color: #718391;
+
+            font-size: 10px;
+
+            font-weight: 800;
+
+            text-transform: uppercase;
+
+            letter-spacing: .7px;
+        }
+
+        .language-select {
+            width: 100%;
+
+            height: 43px;
+
+            border:
+                1px solid #d4e0e7;
+
+            border-radius: 9px;
+
+            padding:
+                0 12px;
+
+            background: #ffffff;
+
+            color: #30475a;
+
+            font-size: 13px;
+
+            outline: none;
+
+            cursor: pointer;
+
+            transition:
+                border-color .2s ease,
+                box-shadow .2s ease;
+        }
+
+        .language-select:focus {
+            border-color: #8dbdce;
+
+            box-shadow:
+                0 0 0 3px rgba(
+                    91,
+                    157,
+                    180,
+                    .10
+                );
+        }
+
+        .generate-report-btn {
+            height: 43px;
+
+            padding:
+                0 17px;
+
+            border: none;
+
+            border-radius: 9px;
+
+            background: #4f93ad;
+
+            color: #ffffff;
+
+            font-size: 12px;
+
+            font-weight: 700;
+
+            cursor: pointer;
+
+            box-shadow:
+                0 4px 10px rgba(
+                    79,
+                    147,
+                    173,
+                    .14
+                );
+
+            transition:
+                transform .18s ease,
+                background .18s ease;
+        }
+
+        .generate-report-btn:hover {
+            transform:
+                translateY(-1px);
+
+            background: #478aa3;
+        }
+
+        .selected-language {
+            display: inline-flex;
+
+            align-items: center;
+
+            gap: 6px;
+
+            margin-top: 9px;
+
+            color: #718392;
+
+            font-size: 10px;
+        }
+
+        .selected-language strong {
+            color: #4d7182;
+        }
+
+
+        /* =========================================================
+           DOWNLOAD
+        ========================================================= */
+
+        .download-btn {
+            display: inline-flex;
+
+            align-items: center;
+
+            gap: 8px;
+
+            text-decoration: none;
+
+            background: #6aa58f;
+
+            color: #ffffff;
+
+            border-radius: 9px;
+
+            padding:
+                10px 15px;
+
+            font-size: 12px;
+
+            font-weight: 700;
+
+            box-shadow:
+                0 4px 10px rgba(
+                    80,
+                    135,
+                    113,
+                    .13
+                );
+
+            transition:
+                transform .18s ease,
+                background .18s ease;
+        }
+
+        .download-btn:hover {
+            transform:
+                translateY(-1px);
+
+            background: #609982;
+        }
+
+        .report-preview {
+            background: #f8fafb;
+
+            color: #4e6474;
+
+            border:
+                1px solid #dfe8ed;
+
+            border-radius: 12px;
+
+            padding: 20px;
+
+            min-height: 350px;
+
+            max-height: 650px;
+
+            overflow-x: auto;
+
+            overflow-y: auto;
+
+            white-space: pre-wrap;
+
+            font-family:
+                Consolas,
+                "Courier New",
+                monospace;
+
+            font-size: 12px;
+
+            line-height: 1.7;
+        }
+
+
+        /* =========================================================
+           ALERTS
+        ========================================================= */
+
+        .alert {
+            margin-bottom: 18px;
+
+            padding:
+                11px 14px;
+
+            border-radius: 9px;
+
+            font-size: 12px;
+
+            font-weight: 600;
+        }
+
+        .alert-success {
+            background: #f0f8f4;
+
+            color: #4a806d;
+
+            border:
+                1px solid #d7ece2;
+        }
+
+        .alert-error {
+            background: #fdf4f4;
+
+            color: #9a6060;
+
+            border:
+                1px solid #efdada;
+        }
+
+
+        /* =========================================================
+           RESPONSIVE
+        ========================================================= */
+
+        @media (max-width: 1100px) {
+
+            .stats-grid {
+                grid-template-columns:
+                    repeat(
+                        2,
+                        1fr
+                    );
+            }
+
+            .quick-grid,
+            .topics-grid {
+                grid-template-columns:
+                    repeat(
+                        2,
+                        1fr
+                    );
+            }
+
+            .document-grid {
+                grid-template-columns:
+                    1fr;
+            }
+
+        }
+
+
+        @media (max-width: 800px) {
+
+            .sidebar {
+                width: 72px;
+
+                padding:
+                    18px 10px;
+            }
+
+            .brand {
+                justify-content: center;
+
+                padding-bottom: 20px;
+            }
+
+            .brand-text,
+            .nav-label,
+            .nav-item span:not(.nav-icon),
+            .sidebar-bottom {
+                display: none;
+            }
+
+            .nav-item {
+                justify-content: center;
+
+                padding:
+                    12px 8px;
+            }
+
+            .main {
+                margin-left: 72px;
+
+                width:
+                    calc(
+                        100% - 72px
+                    );
+            }
+
+            .topbar {
+                padding:
+                    0 20px;
+            }
+
+            .document-pill {
+                display: none;
+            }
+
+            .content {
+                padding: 22px;
+            }
+
+        }
+
+
+        @media (max-width: 600px) {
+
+            .stats-grid,
+            .quick-grid,
+            .topics-grid {
+                grid-template-columns:
+                    1fr;
+            }
+
+            .hero {
+                padding:
+                    27px 22px;
+            }
+
+            .hero h2 {
+                font-size: 26px;
+            }
+
+            .search-form {
+                flex-direction: column;
+            }
+
+            .search-input,
+            .btn {
+                width: 100%;
+            }
+
+            .document-mini-stats {
+                grid-template-columns:
+                    1fr;
+            }
+
+            .report-status {
+                align-items: flex-start;
+
+                flex-direction: column;
+            }
+
+            .language-form {
+                flex-direction: column;
+
+                align-items: stretch;
+            }
+
+            .language-field {
+                min-width: 100%;
+            }
+
+            .generate-report-btn {
+                width: 100%;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+<div class="app">
+
+
+    <!-- =========================================================
+         SIDEBAR
+    ========================================================= -->
+
+    <aside class="sidebar">
+
+        <div class="brand">
+
+            <div class="brand-icon">
+                CM
+            </div>
+
+            <div class="brand-text">
+
+                <strong>
+                    CoalMind
+                </strong>
+
+                <span>
+                    Intelligent Mining Reports
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <div class="nav-label">
+            Workspace
+        </div>
+
+
+        <nav class="nav">
+
+            <button
+                class="nav-item active"
+                onclick="showSection('overview', this)"
+            >
+
+                <span class="nav-icon">
+                    ⌂
+                </span>
+
+                <span>
+                    Overview
+                </span>
+
+            </button>
+
+
+            <button
+                class="nav-item"
+                onclick="showSection('document', this)"
+            >
+
+                <span class="nav-icon">
+                    ▣
+                </span>
+
+                <span>
+                    Document
+                </span>
+
+            </button>
+
+
+            <button
+                class="nav-item"
+                onclick="showSection('search', this)"
+            >
+
+                <span class="nav-icon">
+                    ⌕
+                </span>
+
+                <span>
+                    Search
+                </span>
+
+            </button>
+
+
+            <button
+                class="nav-item"
+                onclick="showSection('wordcloud', this)"
+            >
+
+                <span class="nav-icon">
+                    ✦
+                </span>
+
+                <span>
+                    Word Cloud
+                </span>
+
+            </button>
+
+
+            <button
+                class="nav-item"
+                onclick="showSection('topics', this)"
+            >
+
+                <span class="nav-icon">
+                    ◈
+                </span>
+
+                <span>
+                    Topics
+                </span>
+
+            </button>
+
+
+            <button
+                class="nav-item"
+                onclick="showSection('askai', this)"
+            >
+
+                <span class="nav-icon">
+                    ✧
+                </span>
+
+                <span>
+                    Ask AI
+                </span>
+
+            </button>
+
+
+            <button
+                class="nav-item"
+                onclick="showSection('report', this)"
+            >
+
+                <span class="nav-icon">
+                    ▤
+                </span>
+
+                <span>
+                    Automated Report
+                </span>
+
+            </button>
+
+        </nav>
+
+
+        <div class="sidebar-bottom">
+
+            <div class="system-status">
+
+                <span class="status-dot"></span>
+
+                <span>
+                    Analysis system ready
+                </span>
+
+            </div>
+
+        </div>
+
+    </aside>
+
+
+
+    <!-- =========================================================
+         MAIN
+    ========================================================= -->
+
+    <main class="main">
+
+
+        <!-- =====================================================
+             TOPBAR
+        ===================================================== -->
+
+        <header class="topbar">
+
+            <div class="topbar-left">
+
+                <h1>
+                    CoalMind Dashboard
+                </h1>
+
+                <p>
+                    AI-powered geological and mining report analysis
+                </p>
+
+            </div>
+
+
+            <div class="document-pill">
+
+                <span class="document-pill-dot"></span>
+
+                Report Loaded
+
+            </div>
+
+        </header>
+
+
+
+        <div class="content">
+
+
+            <!-- =================================================
+                 ALERTS
+            ================================================= -->
+
+            {% if upload_message %}
+
+            <div class="alert alert-success">
+
+                ✓ {{ upload_message }}
+
+            </div>
+
+            {% endif %}
+
+
+            {% if error_message %}
+
+            <div class="alert alert-error">
+
+                ⚠ {{ error_message }}
+
+            </div>
+
+            {% endif %}
+
+
+
+            <!-- =================================================
+                 OVERVIEW
+            ================================================= -->
+
+            <section
+                id="overview"
+                class="section active"
+            >
+
+                <div class="hero">
+
+                    <div class="hero-content">
+
+                        <span class="hero-tag">
+                            INTELLIGENT REPORT ANALYSIS
+                        </span>
+
+                        <h2>
+                            Welcome to CoalMind
+                        </h2>
+
+                        <p>
+                            Transform complex geological and mining
+                            reports into structured information using
+                            OCR, document analysis, topic discovery,
+                            search and AI-assisted insights.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- STATISTICS -->
+
+                <div class="stats-grid">
+
+
+                    <div class="stat-card">
+
+                        <div class="stat-icon">
+                            ▣
+                        </div>
+
+                        <div>
+
+                            <div class="stat-label">
+                                Document Pages
+                            </div>
+
+                            <strong class="stat-value">
+                                {{ pages }}
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <div class="stat-card">
+
+                        <div class="stat-icon">
+                            ▤
+                        </div>
+
+                        <div>
+
+                            <div class="stat-label">
+                                Tables Detected
+                            </div>
+
+                            <strong class="stat-value">
+                                {{ tables }}
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <div class="stat-card">
+
+                        <div class="stat-icon">
+                            ≡
+                        </div>
+
+                        <div>
+
+                            <div class="stat-label">
+                                Rows Extracted
+                            </div>
+
+                            <strong class="stat-value">
+                                {{ rows }}
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <div class="stat-card">
+
+                        <div class="stat-icon">
+                            ◈
+                        </div>
+
+                        <div>
+
+                            <div class="stat-label">
+                                Important Topics
+                            </div>
+
+                            <strong class="stat-value">
+                                {{ topics|length }}
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- QUICK ACTIONS -->
+
+                <div class="section-heading">
+
+                    <h2>
+                        Quick Actions
+                    </h2>
+
+                    <p>
+                        Access the main analysis features directly.
+                    </p>
+
+                </div>
+
+
+
+                <div class="quick-grid">
+
+
+                    <a
+                        href="#"
+                        class="quick-action"
+                        onclick="showSection('search'); return false;"
+                    >
+
+                        <div class="quick-icon">
+                            ⌕
+                        </div>
+
+                        <div>
+
+                            <strong>
+                                Search Report
+                            </strong>
+
+                            <span>
+                                Find relevant information
+                            </span>
+
+                        </div>
+
+                    </a>
+
+
+
+                    <a
+                        href="#"
+                        class="quick-action"
+                        onclick="showSection('topics'); return false;"
+                    >
+
+                        <div class="quick-icon">
+                            ◈
+                        </div>
+
+                        <div>
+
+                            <strong>
+                                Discover Topics
+                            </strong>
+
+                            <span>
+                                Explore important topics
+                            </span>
+
+                        </div>
+
+                    </a>
+
+
+
+                    <a
+                        href="#"
+                        class="quick-action"
+                        onclick="showSection('wordcloud'); return false;"
+                    >
+
+                        <div class="quick-icon">
+                            ✦
+                        </div>
+
+                        <div>
+
+                            <strong>
+                                Word Cloud
+                            </strong>
+
+                            <span>
+                                Visualize key terms
+                            </span>
+
+                        </div>
+
+                    </a>
+
+
+
+                    <a
+                        href="#"
+                        class="quick-action"
+                        onclick="showSection('askai'); return false;"
+                    >
+
+                        <div class="quick-icon">
+                            ✧
+                        </div>
+
+                        <div>
+
+                            <strong>
+                                Ask AI
+                            </strong>
+
+                            <span>
+                                Query the processed report
+                            </span>
+
+                        </div>
+
+                    </a>
+
+
+
+                    <a
+                        href="#"
+                        class="quick-action"
+                        onclick="showSection('report'); return false;"
+                    >
+
+                        <div class="quick-icon">
+                            ▤
+                        </div>
+
+                        <div>
+
+                            <strong>
+                                Automated Report
+                            </strong>
+
+                            <span>
+                                View generated report
+                            </span>
+
+                        </div>
+
+                    </a>
+
+
+
+                    <a
+                        href="#"
+                        class="quick-action"
+                        onclick="showSection('document'); return false;"
+                    >
+
+                        <div class="quick-icon">
+                            ↑
+                        </div>
+
+                        <div>
+
+                            <strong>
+                                Upload New PDF
+                            </strong>
+
+                            <span>
+                                Process another report
+                            </span>
+
+                        </div>
+
+                    </a>
+
+
+                </div>
+
+
+
+                <!-- CURRENT REPORT -->
+
+                <div class="report-status">
+
+                    <div class="report-status-left">
+
+                        <div class="report-file-icon">
+                            ▣
+                        </div>
+
+                        <div>
+
+                            <h3>
+                                Current Report
+                            </h3>
+
+                            <div class="report-name">
+                                {{ current_document }}
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <span class="ready-badge">
+                        READY
+                    </span>
+
+                </div>
+
+
+            </section>
+
+
+
+            <!-- =================================================
+                 DOCUMENT
+            ================================================= -->
+
+            <section
+                id="document"
+                class="section"
+            >
+
+                <div class="section-heading">
+
+                    <h2>
+                        Document
+                    </h2>
+
+                    <p>
+                        View the currently processed report and upload
+                        a new PDF when required.
+                    </p>
+
+                </div>
+
+
+
+                <div class="document-grid">
+
+
+                    <div class="card document-main">
+
+                        <h3 class="card-title">
+                            Current Report
+                        </h3>
+
+                        <p class="card-description">
+                            This report has been processed through the
+                            CoalMind analysis pipeline using OCR and is
+                            ready for search, topic discovery and AI
+                            queries.
+                        </p>
+
+
+
+                        <div class="document-file">
+
+                            <div class="file-icon">
+                                ▣
+                            </div>
+
+                            <div>
+
+                                <div class="file-name">
+                                    {{ current_document }}
+                                </div>
+
+                                <div class="file-subtitle">
+                                    Processed using OCR
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+
+                        <div class="document-mini-stats">
+
+
+                            <div class="mini-stat">
+
+                                <span>
+                                    Pages
+                                </span>
+
+                                <strong>
+                                    {{ pages }}
+                                </strong>
+
+                            </div>
+
+
+
+                            <div class="mini-stat">
+
+                                <span>
+                                    Tables
+                                </span>
+
+                                <strong>
+                                    {{ tables }}
+                                </strong>
+
+                            </div>
+
+
+
+                            <div class="mini-stat">
+
+                                <span>
+                                    Rows
+                                </span>
+
+                                <strong>
+                                    {{ rows }}
+                                </strong>
+
+                            </div>
+
+
+                        </div>
+
+                    </div>
+
+
+
+                    <div class="card">
+
+                        <h3 class="card-title">
+                            Upload Report
+                        </h3>
+
+                        <p class="card-description">
+                            Upload a PDF to run the CoalMind OCR and
+                            document processing workflow.
+                        </p>
+
+
+                        <form
+                            action="/upload"
+                            method="POST"
+                            enctype="multipart/form-data"
+                            id="uploadForm"
+                        >
+
+                            <label
+                                class="upload-box"
+                                for="pdfFile"
+                            >
+
+                                <div class="upload-icon">
+                                    ↑
+                                </div>
+
+                                <strong>
+                                    Choose PDF Report
+                                </strong>
+
+                                <span>
+                                    Click here to select a PDF
+                                </span>
+
+
+                                <input
+                                    type="file"
+                                    id="pdfFile"
+                                    name="pdf_file"
+                                    accept=".pdf,application/pdf"
+                                >
+
+                            </label>
+
+                        </form>
+
+                    </div>
+
+
+                </div>
+
+            </section>
+
+
+
+            <!-- =================================================
+                 SEARCH
+            ================================================= -->
+
+            <section
+                id="search"
+                class="section"
+            >
+
+                <div class="section-heading">
+
+                    <h2>
+                        Search Report
+                    </h2>
+
+                    <p>
+                        Search the processed report for specific words,
+                        terms or information.
+                    </p>
+
+                </div>
+
+
+                <div class="card">
+
+                    <form
+                        action="/search"
+                        method="GET"
+                        class="search-form"
+                    >
+
+                        <input
+                            type="text"
+                            name="query"
+                            class="search-input"
+                            placeholder="Search the report..."
+                            value="{{ query }}"
+                            autocomplete="off"
+                        >
+
+
+                        <button
+                            type="submit"
+                            class="btn btn-primary"
+                        >
+                            Search
+                        </button>
+
+                    </form>
+
+
+
+                    {% if query %}
+
+                        {% if results %}
+
+                            <div class="search-summary">
+
+                                Search results for
+
+                                <strong>
+                                    "{{ query }}"
+                                </strong>
+
+                            </div>
+
+
+                            {% for result in results %}
+
+                                <div class="search-result">
+
+                                    {% if result is mapping %}
+
+                                        {% if result.page is defined %}
+
+                                            <span class="page-badge">
+                                                Page {{ result.page }}
+                                            </span>
+
+                                        {% endif %}
+
+
+                                        {% if result.title is defined
+                                              and result.title %}
+
+                                            <div class="result-title">
+                                                {{ result.title }}
+                                            </div>
+
+                                        {% endif %}
+
+
+                                        {% if result.rows is defined
+                                              and result.rows %}
+
+                                            {% for row in result.rows %}
+
+                                                <div class="result-line">
+                                                    {{ row }}
+                                                </div>
+
+                                            {% endfor %}
+
+                                        {% elif result.text is defined %}
+
+                                            <div class="result-line">
+                                                {{ result.text }}
+                                            </div>
+
+                                        {% endif %}
+
+                                    {% else %}
+
+                                        <div class="result-line">
+                                            {{ result }}
+                                        </div>
+
+                                    {% endif %}
+
+                                </div>
+
+                            {% endfor %}
+
+
+                        {% else %}
+
+                            <div class="no-results">
+
+                                No matching information was found
+                                for <strong>"{{ query }}"</strong>.
+
+                            </div>
+
+                        {% endif %}
+
+
+                    {% else %}
+
+                        <div class="empty-state">
+
+                            Enter a search term to find information
+                            inside the processed report.
+
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+            </section>
+
+
+
+            <!-- =================================================
+                 WORD CLOUD
+            ================================================= -->
+
+            <section
+                id="wordcloud"
+                class="section"
+            >
+
+                <div class="section-heading">
+
+                    <h2>
+                        Word Cloud
+                    </h2>
+
+                    <p>
+                        Visual representation of important terms
+                        identified from the processed report.
+                    </p>
+
+                </div>
+
+
+                <div class="wordcloud-container">
+
+                    {% if wordcloud_exists %}
+
+                        <img
+                            src="/wordcloud"
+                            alt="Generated Word Cloud"
+                        >
+
+                    {% else %}
+
+                        <div class="empty-state">
+
+                            Word Cloud has not been generated yet.
+
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+            </section>
+
+
+
+            <!-- =================================================
+                 TOPICS
+            ================================================= -->
+
+            <section
+                id="topics"
+                class="section"
+            >
+
+                <div class="section-heading">
+
+                    <h2>
+                        Important Topics
+                    </h2>
+
+                    <p>
+                        Select a topic to automatically search for
+                        relevant information in the report.
+                    </p>
+
+                </div>
+
+
+                {% if topics %}
+
+                    <div class="topics-grid">
+
+                        {% for topic in topics %}
+
+                            <a
+                                href="/search?query={{ topic | urlencode }}"
+                                class="topic-card"
+                                data-topic="{{ topic | e }}"
+                                onclick="searchTopic(event, this.dataset.topic)"
+                            >
+
+                                <div class="topic-number">
+                                    TOPIC {{ loop.index }}
+                                </div>
+
+                                <div class="topic-name">
+                                    {{ topic }}
+                                </div>
+
+                                <div class="topic-hint">
+                                    Click to search →
+                                </div>
+
+                            </a>
+
+                        {% endfor %}
+
+                    </div>
+
+
+                {% else %}
+
+                    <div class="card">
+
+                        <div class="empty-state">
+
+                            No important topics are available yet.
+
+                        </div>
+
+                    </div>
+
+                {% endif %}
+
+            </section>
+
+
+
+            <!-- =================================================
+                 ASK AI
+            ================================================= -->
+
+            <section
+                id="askai"
+                class="section"
+            >
+
+                <div class="section-heading">
+
+                    <h2>
+                        Ask AI
+                    </h2>
+
+                    <p>
+                        Ask a question about the information contained
+                        in the processed report.
+                    </p>
+
+                </div>
+
+
+                <div class="card">
+
+                    <h3 class="card-title">
+                        Query the Report
+                    </h3>
+
+                    <p class="card-description">
+                        Enter a question and CoalMind will identify
+                        relevant information from the processed document.
+                    </p>
+
+
+                    <form
+                        action="/ask-ai"
+                        method="POST"
+                        class="ai-form"
+                    >
+
+                        <textarea
+                            name="question"
+                            class="ai-input"
+                            placeholder="Example: What was the coal production during January?"
+                        >{{ question if question else "" }}</textarea>
+
+
+                        <button
+                            type="submit"
+                            class="btn btn-primary ai-submit"
+                        >
+                            Ask AI
+                        </button>
+
+                    </form>
+
+
+                    {% if ai_response %}
+
+                        <div class="ai-response">
+                            {{ ai_response }}
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+            </section>
+
+
+
+            <!-- =================================================
+                 AUTOMATED REPORT
+            ================================================= -->
+
+            <section
+                id="report"
+                class="section"
+            >
+
+                <div class="section-heading">
+
+                    <h2>
+                        Automated Report
+                    </h2>
+
+                    <p>
+                        Generate the automated report from the processed document.
+                    </p>
+
+                </div>
+
+
+
+                <form
+                    action="/generate-report"
+                    method="POST"
+                    id="reportLanguageForm"
+                >
+
+                    <input
+                        type="hidden"
+                        name="language"
+                        value="english"
+                    >
+
+                    <button
+                        type="submit"
+                        class="generate-report-btn"
+                    >
+                        Generate Report
+                    </button>
+
+                </form>
+
+
+                <!-- =================================================
+                     GENERATED REPORT
+                ================================================= -->
+
+                <div class="card">
+
+                    {% if automated_report %}
+
+                        <div class="report-actions">
+
+                            <a
+                                href="/download/report"
+                                class="download-btn"
+                            >
+                                ↓ Download Report
+                            </a>
+
+                        </div>
+
+
+                        <div class="report-preview">
+                            {{ automated_report }}
+                        </div>
+
+
+                    {% else %}
+
+                        <div class="empty-state">
+
+                            Automated report has not been generated yet.
+                            Click the button above to generate the report.
+
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+            </section>
+
+
+        </div>
+
+    </main>
+
+</div>
+
+
+
+<script>
+
+
+    /* =====================================================
+       SECTION NAVIGATION
+    ===================================================== */
+
+    function showSection(
+        sectionId,
+        clickedButton = null
+    ) {
+
+        const sections =
+            document.querySelectorAll(
+                ".section"
+            );
+
+
+        sections.forEach(
+            function(section) {
+
+                section.classList.remove(
+                    "active"
+                );
+
+            }
+        );
+
+
+        const target =
+            document.getElementById(
+                sectionId
+            );
+
+
+        if (target) {
+
+            target.classList.add(
+                "active"
+            );
+
+        }
+
+
+        const navItems =
+            document.querySelectorAll(
+                ".nav-item"
+            );
+
+
+        navItems.forEach(
+            function(item) {
+
+                item.classList.remove(
+                    "active"
+                );
+
+            }
+        );
+
+
+        if (clickedButton) {
+
+            clickedButton.classList.add(
+                "active"
+            );
+
+        } else {
+
+            navItems.forEach(
+                function(item) {
+
+                    const onclick =
+                        item.getAttribute(
+                            "onclick"
+                        );
+
+
+                    if (
+                        onclick &&
+                        onclick.includes(
+                            "'" +
+                            sectionId +
+                            "'"
+                        )
+                    ) {
+
+                        item.classList.add(
+                            "active"
+                        );
+
+                    }
+
+                }
+            );
+
+        }
+
+
+        window.scrollTo({
+
+            top: 0,
+
+            behavior: "smooth"
+
+        });
+
+    }
+
+
+
+    /* =====================================================
+       TOPIC → AUTOMATIC SEARCH
+    ===================================================== */
+
+    async function searchTopic(
+        event,
+        topic
+    ) {
+
+        event.preventDefault();
+
+
+        try {
+
+            const response =
+                await fetch(
+                    "/search?query=" +
+                    encodeURIComponent(
+                        topic
+                    )
+                );
+
+
+            if (!response.ok) {
+
+                throw new Error(
+                    "Search request failed"
+                );
+
+            }
+
+
+            const html =
+                await response.text();
+
+
+            const parser =
+                new DOMParser();
+
+
+            const doc =
+                parser.parseFromString(
+                    html,
+                    "text/html"
+                );
+
+
+            const newSearch =
+                doc.getElementById(
+                    "search"
+                );
+
+
+            const currentSearch =
+                document.getElementById(
+                    "search"
+                );
+
+
+            if (
+                !newSearch ||
+                !currentSearch
+            ) {
+
+                throw new Error(
+                    "Search section not found"
+                );
+
+            }
+
+
+            currentSearch.innerHTML =
+                newSearch.innerHTML;
+
+
+            showSection(
+                "search"
+            );
+
+
+            history.pushState(
+                {},
+                "",
+                "/search?query=" +
+                encodeURIComponent(
+                    topic
+                )
+            );
+
+        }
+
+
+        catch (error) {
+
+            console.error(
+                "Topic search error:",
+                error
+            );
+
+
+            window.location.href =
+                "/search?query=" +
+                encodeURIComponent(
+                    topic
+                );
+
+        }
+
+    }
+
+
+
+    /* =====================================================
+       PDF UPLOAD
+    ===================================================== */
+
+    const fileInput =
+        document.getElementById(
+            "pdfFile"
+        );
+
+
+    if (fileInput) {
+
+        fileInput.addEventListener(
+            "change",
+            function() {
+
+                if (
+                    this.files &&
+                    this.files.length > 0
+                ) {
+
+                    const selectedFile =
+                        this.files[0];
+
+
+                    if (
+                        selectedFile.type !==
+                        "application/pdf" &&
+                        !selectedFile.name
+                            .toLowerCase()
+                            .endsWith(".pdf")
+                    ) {
+
+                        alert(
+                            "Please select a PDF file."
+                        );
+
+
+                        this.value = "";
+
+                        return;
+
+                    }
+
+
+                    document
+                        .getElementById(
+                            "uploadForm"
+                        )
+                        .submit();
+
+                }
+
+            }
+        );
+
+    }
+
+
+
+    /* =====================================================
+       KEEP SEARCH RESULTS WHEN PAGE LOADS
+    ===================================================== */
+
+    {% if query %}
+
+        showSection(
+            "search"
+        );
+
+    {% endif %}
+
+
+
+    /* =====================================================
+       KEEP ASK AI OPEN AFTER RESPONSE
+    ===================================================== */
+
+    {% if ai_response %}
+
+        showSection(
+            "askai"
+        );
+
+    {% endif %}
+
+
+
+    /* =====================================================
+       KEEP AUTOMATED REPORT OPEN
+    ===================================================== */
+
+    {% if automated_report %}
+
+        showSection(
+            "report"
+        );
+
+    {% endif %}
+
+
+
+    /* =====================================================
+       RETURN TO OVERVIEW AFTER UPLOAD
+    ===================================================== */
+
+    {% if upload_message %}
+
+        showSection(
+            "overview"
+        );
+
+    {% endif %}
+
+
+</script>
+
+
+</body>
+
+</html>
